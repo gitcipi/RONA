@@ -23,14 +23,14 @@
                 <a href="#about">About</a>
                 <a href="#experiences">Experiences</a>
                 <a href="#history">History</a>
-                <a href="#booking" class="nav-btn">Enquire</a>
+                <a href="#" class="nav-btn btn-trigger-wa">Enquire</a>
             </nav>
         </div>
     </header>
 
     <!-- Sticky Mobile CTA -->
     <div class="sticky-cta-container">
-        <a href="#booking" class="btn">ENQUIRE & BOOK</a>
+        <a href="#" class="btn btn-trigger-wa">ENQUIRE & BOOK</a>
     </div>
 
     <!-- 1. Hero Section -->
@@ -163,7 +163,7 @@
         <div class="container">
             <h2>Secure Your Private Sailing Experience</h2>
             <br>
-            <a href="https://forms.gle/placeholder" target="_blank" class="btn" style="transform: scale(1.1);">ENQUIRE & BOOK</a>
+            <a href="#" class="btn btn-trigger-wa" style="transform: scale(1.1);">ENQUIRE & BOOK</a>
         </div>
     </section>
 
@@ -194,8 +194,24 @@
         <div class="modal-content">
             <span class="close-modal">&times;</span>
             <h3 id="modalTitle">Enquire via WhatsApp</h3>
-            <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 1rem;">Customize your message below to send directly to our team.</p>
-            <textarea id="waMessage" rows="5" placeholder="Write your message here..."></textarea>
+            <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 1.5rem;">Select your preferred experience and customize your message.</p>
+            
+            <div class="form-group" style="margin-bottom: 1.5rem;">
+                <label for="experienceSelect" style="display: block; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--accent); margin-bottom: 0.5rem;">Choose Experience</label>
+                <select id="experienceSelect">
+                    <option value="General Enquiry">General Enquiry</option>
+                    <option value="Day Sail Experience">Day Sail Experience</option>
+                    <option value="Sunset Experience">Sunset Experience</option>
+                    <option value="Corporate & Private Occasions">Corporate & Private Occasions</option>
+                    <option value="Extended Voyage">Extended Voyage</option>
+                </select>
+            </div>
+
+            <div class="form-group" style="margin-bottom: 1rem;">
+                <label for="waMessage" style="display: block; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--accent); margin-bottom: 0.5rem;">Custom Message</label>
+                <textarea id="waMessage" rows="4" placeholder="Write your message here..."></textarea>
+            </div>
+
             <button id="sendWaBtn" class="btn" style="width: 100%; margin-top: 1rem;">Send to WhatsApp</button>
         </div>
     </div>
@@ -261,13 +277,33 @@
         const closeModalBtn = document.querySelector('.close-modal');
         const sendWaBtn = document.getElementById('sendWaBtn');
         const waMessageInput = document.getElementById('waMessage');
+        const experienceSelect = document.getElementById('experienceSelect');
         const waNumber = '6285333527965'; 
 
+        // Update message whenever experience changes
+        experienceSelect.addEventListener('change', () => {
+            const val = experienceSelect.value;
+            waMessageInput.value = `Hello! I would like to enquire about the ${val}.`;
+        });
+
+        // Trigger for individual cards
         document.querySelectorAll('.flip-card-back .btn-outline').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 e.preventDefault();
                 const experienceTitle = e.target.parentElement.querySelector('h3').innerText;
-                waMessageInput.value = `Hello! I would like to enquire about the ${experienceTitle} experience.`;
+                // Find and select the option in the dropdown
+                experienceSelect.value = experienceTitle;
+                waMessageInput.value = `Hello! I would like to enquire about the ${experienceTitle}.`;
+                waModal.classList.add('show');
+            });
+        });
+
+        // General trigger (Header/Sticky CTA)
+        document.querySelectorAll('.btn-trigger-wa').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                experienceSelect.value = 'General Enquiry';
+                waMessageInput.value = `Hello! I am interested in chartering RONA and would like more information.`;
                 waModal.classList.add('show');
             });
         });
